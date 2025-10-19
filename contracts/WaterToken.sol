@@ -4,12 +4,11 @@ import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 contract WaterToken is ERC20, Ownable {
-
     mapping(address => bool) private minters;
 
     constructor() ERC20("WaterToken", "wtr") Ownable(msg.sender) {}
 
-    modifier onlyMinter(address _sender){
+    modifier onlyMinter(address _sender) {
         require(minters[_sender], "No eres minero");
         _;
     }

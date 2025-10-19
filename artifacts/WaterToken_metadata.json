@@ -609,11 +609,11 @@
 			]
 		},
 		"contracts/WaterToken.sol": {
-			"keccak256": "0xfdeb2ea00d90416652081eef1efc007f3c20de079e02c16265a7cefc22d49727",
+			"keccak256": "0xc87bb71f10d3d2e6c0829f8feb1ba9911f3edf558fa3361f54a8a2dd53ae7a5e",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://4ce12da74440569628d9857582f6e0c362034da9d39ecf66a3c182dd8ee3cf67",
-				"dweb:/ipfs/QmcqwPYpQWmC16qFTLjjQ6p7Hm7PMDkUgoyQdUPgbQxFjT"
+				"bzz-raw://4f55e981631bee9ae014148d3616a9972c5ee85e3db31e548e2356407fcf6341",
+				"dweb:/ipfs/QmeJtD1JP6WSFzDQ1vTc6RPzV3KrAWuZZRBzR5AfyYUhg1"
 			]
 		}
 	},
