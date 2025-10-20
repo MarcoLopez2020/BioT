@@ -482,6 +482,66 @@
 			{
 				"inputs": [
 					{
+						"internalType": "address",
+						"name": "_company",
+						"type": "address"
+					}
+				],
+				"name": "getSensors",
+				"outputs": [
+					{
+						"internalType": "string[]",
+						"name": "",
+						"type": "string[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_company",
+						"type": "address"
+					}
+				],
+				"name": "getSites",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "string",
+								"name": "siteId",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "latitude",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "longitude",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "benchmark",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct WaterManagement.Site[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "bytes32",
 						"name": "role",
 						"type": "bytes32"
@@ -532,6 +592,47 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_sensorId",
+						"type": "string"
+					}
+				],
+				"name": "registerSensor",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_siteId",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_latitude",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_longitude",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_benchmark",
+						"type": "uint256"
+					}
+				],
+				"name": "registerSite",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -819,11 +920,11 @@
 			]
 		},
 		"contracts/WaterManagement.sol": {
-			"keccak256": "0x5673020bba16f04d42f60f2706a73682e9a4c69532a0e8700f273076c0474390",
+			"keccak256": "0xe88bc155028354115699e86e6a5317f695d6248f341bfa5943599d37afd8eab5",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://7fdb41132b561d59f6c1920ff5e51a0bd2f684dbfb4d3f77c88e8a076719d097",
-				"dweb:/ipfs/QmWANivnh2fzGUgwigew5YHQXpWerjLgsvScKAXW3LzcxN"
+				"bzz-raw://4ce1dfc246a1118ec2bb21c9cc8946fd330531dcbcd6a8bf8d7be2540b00f0c4",
+				"dweb:/ipfs/QmVTxbBQqspaRbLfw6VtjQs8TdmMpcyrRbKGFq2cgXQQDB"
 			]
 		},
 		"contracts/WaterToken.sol": {

@@ -7,15 +7,16 @@ import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import "./WaterToken.sol";
 
 contract WaterManagement is Ownable, AccessControl {
+
     uint private requestId;
     address[] private entities;
     mapping(address => uint[]) private companyToRequest;
     mapping(address => uint[]) private govToRequest;
-    mapping(address =>string[]) private companyToSensorIds;
+    mapping(address => string[]) private companyToSensorIds;
     mapping(address => Entity) private addressToEntityData;
     mapping(uint => Request) private requestIdToRequest;
     mapping(address => Site[]) private companyToSites;
-
+    mapping(address => SensorData[]) private companyToSensorData;
 
 
     bytes32 public constant COMPANY_ROLE = keccak256("COMPANY");
@@ -41,6 +42,14 @@ contract WaterManagement is Ownable, AccessControl {
         string latitude;
         string longitude;
         uint benchmark;
+    }
+
+    
+    struct SensorData{
+        string sensorId;
+        string siteId;
+        uint value;
+        uint timestamp;
     }
 
     enum Status {
@@ -165,7 +174,7 @@ contract WaterManagement is Ownable, AccessControl {
         return true;
     }
     function answerRequest(uint _requestld, string calldata _newStatus) external onlyCompany(msg.sender){
-        if (Strings.equal(_newStatus, "Aprovado" )){
+        if (Strings.equal(_newStatus, "aprovado" )){
             requestIdToRequest [_requestld].status = Status.APPROVED;
         }else {
             requestIdToRequest[_requestld].status= Status.DENIED;
@@ -205,7 +214,7 @@ contract WaterManagement is Ownable, AccessControl {
         );
     }
 
-    function registerSensor(string calldata _sensorId) external onlyCompany(msg. sender) {
+    function registerSensor(string calldata _sensorId) external onlyCompany(msg.sender) {
         companyToSensorIds[msg.sender].push(_sensorId) ;
     }
 
@@ -213,4 +222,40 @@ contract WaterManagement is Ownable, AccessControl {
          companyToSites[msg.sender].push(Site( _siteId, _latitude, _longitude, _benchmark));
     }
 
-}        
+    function pushData (string calldata _sensorId, string calldata _siteId, uint _value, uint _timestamp) external onlyCompany(msg.sender) returns(bool)  {
+        require (bytes ( _sensorId).length > 0, "Sensor ID data cannot be NULL" ) ;
+        require (bytes ( _siteId).length > 0, "Site ID data cannot be NULL" ) ;
+        require(_value > 0, "Mas de 0 litros de agua");
+       require(_timestamp > 0, "Tiempo no puede ser 0");
+
+        uint benchmark = checkSiteToCompany(_siteId, msg. sender) ;
+        if (checkSensorIdToCompany(_sensorId, msg. sender) && benchmark !=0){
+            SensorData memory sensorData = SensorData(_sensorId, _siteId, _value, _timestamp);
+            companyToSensorData[msg.sender].push(sensorData) ;
+
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    function checkSensorIdToCompany(string calldata _sensorId, address _company) private view returns (bool) {
+        string[] memory ids = companyToSensorIds[_company];
+        for (uint i = 0; i < ids.length; i++){
+          if (Strings.equal(ids[i], _sensorId)) {
+            return true;  
+            }
+        }
+        return false;
+    }
+
+        function checkSiteToCompany(string calldata _siteId, address _company) private view returns (uint) {
+        Site[] memory sites = companyToSites[_company];
+        for (uint i = 0; i < sites.length; i++){
+          if (Strings.equal(sites[i].siteId, _siteId)) {
+            return sites[i].benchmark;  
+            }
+        }
+        return 0;
+    }
+}       
