@@ -10,6 +10,7 @@ contract WaterManagement is Ownable, AccessControl {
 
     uint private requestId;
     address[] private entities;
+    mapping(address => int) private saved;
     mapping(address => uint[]) private companyToRequest;
     mapping(address => uint[]) private govToRequest;
     mapping(address => string[]) private companyToSensorIds;
@@ -233,6 +234,8 @@ contract WaterManagement is Ownable, AccessControl {
             SensorData memory sensorData = SensorData(_sensorId, _siteId, _value, _timestamp);
             companyToSensorData[msg.sender].push(sensorData) ;
 
+            mintToken(msg. sender, _value, benchmark);
+
             return true;
         }else{
             return false;
@@ -258,4 +261,17 @@ contract WaterManagement is Ownable, AccessControl {
         }
         return 0;
     }
-}       
+
+        function mintToken(address _company, uint _value, uint _benchmark) private {
+        if (_value < _benchmark){
+            saved[_company] += int (_benchmark - _value) ;
+        }else {
+            saved[_company] -= int (_value - _benchmark) ;
+        }
+        if ( saved[_company] >= int(_benchmark)) {
+            waterToken. mint(_company, 1);
+            saved[_company] -= int(_benchmark);
+        }
+    }
+
+}
