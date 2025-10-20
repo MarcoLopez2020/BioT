@@ -7,10 +7,12 @@ import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import "./WaterToken.sol";
 
 contract WaterManagement is Ownable, AccessControl {
-
+    uint private requestId;
     address[] private entities;
-
-    mapping(address => Entity) public addressToEntityData;
+    mapping(address => uint[]) private companyToRequest;
+    mapping(address => uint[]) private govToRequest;
+    mapping(address => Entity) private addressToEntityData;
+    mapping(uint => Request) private requestIdToRequest;
 
     bytes32 public constant COMPANY_ROLE = keccak256("COMPANY");
     bytes32 public constant GOVERNMENT_ROLE = keccak256("GOVERNMENT");
@@ -22,14 +24,54 @@ contract WaterManagement is Ownable, AccessControl {
         string nif;
     }
 
+    struct Request {
+        uint id;
+        address company;
+        address gov;
+        bool answered;
+        Status status;
+    }
+
+    enum Status {
+        PENDING,
+        APPROVED,
+        DENIED
+    }
+
     event EntityAdded(address indexed entity);
+    event DataRequested(address indexed company, address indexed government);
 
     constructor(address _waterAddress) Ownable(msg.sender) {
         waterToken = WaterToken(_waterAddress);
+        requestId = 1;
     }
 
-    function addEntity(address _entityAddress, string calldata _name, string calldata _nif, string calldata _role) external onlyOwner {
-        require(owner() != _entityAddress, "La direecion no es la misama qie el owner del contrato");
+    modifier onlyCompany(address _company) {
+        require(
+            hasRole(COMPANY_ROLE, _company),
+            "La direecion no es el rol de Company"
+        );
+        _;
+    }
+
+        modifier onlyGovernment(address _government) {
+        require(
+            hasRole(GOVERNMENT_ROLE, _government),
+            "La direecion no es GOVERNMENT"
+        );
+        _;
+    }
+
+    function addEntity(
+        address _entityAddress,
+        string calldata _name,
+        string calldata _nif,
+        string calldata _role
+    ) external onlyOwner {
+        require(
+            owner() != _entityAddress,
+            "La direecion no es la misama qie el owner del contrato"
+        );
         Entity memory entity = Entity(_entityAddress, _name, _nif);
         addressToEntityData[_entityAddress] = entity;
 
@@ -43,38 +85,92 @@ contract WaterManagement is Ownable, AccessControl {
 
         entities.push(_entityAddress);
         emit EntityAdded(_entityAddress);
-
     }
 
     function fetchEntities() external view returns (Entity[] memory) {
-        require(hasRole(GOVERNMENT_ROLE, msg.sender) || hasRole(COMPANY_ROLE, msg.sender), "La entidad no tiene rol");
+        require(
+            hasRole(GOVERNMENT_ROLE, msg.sender) ||
+                hasRole(COMPANY_ROLE, msg.sender),
+            "La entidad no tiene rol"
+        );
 
         Entity[] memory data = new Entity[](entities.length);
         // IF GOVERNMENT ROLE, RETURN ALL COMPANY ACCOUNTS
-         if(hasRole(GOVERNMENT_ROLE, msg.sender)) {
-            for (uint i = 0; i < entities.length;  i++) {
-                if (hasRole(COMPANY_ROLE, entities [i])) {
-                     (address entity, string memory name, string memory nif) = fetchEntityData(entities[i]);
-                     data[i] = Entity(entity, name, nif);
-
-                    }
-                }
-        }   
-        
-        // IF COMPANY ROLE, RETURN ONLY THEIR ACCOUNT
-         if(hasRole(COMPANY_ROLE, msg.sender)) {
-            for (uint i = 0; i < entities.length;  i++) {
-              if (hasRole(GOVERNMENT_ROLE, entities [i])) {
-                    (address entity, string memory name, string memory nif) = fetchEntityData(entities[i]);
+        if (hasRole(GOVERNMENT_ROLE, msg.sender)) {
+            for (uint i = 0; i < entities.length; i++) {
+                if (hasRole(COMPANY_ROLE, entities[i])) {
+                    (
+                        address entity,
+                        string memory name,
+                        string memory nif
+                    ) = fetchEntityData(entities[i]);
                     data[i] = Entity(entity, name, nif);
                 }
             }
-         }
-         return  data;
+        }
+
+        // IF COMPANY ROLE, RETURN ONLY THEIR ACCOUNT
+        if (hasRole(COMPANY_ROLE, msg.sender)) {
+            for (uint i = 0; i < entities.length; i++) {
+                if (hasRole(GOVERNMENT_ROLE, entities[i])) {
+                    (
+                        address entity,
+                        string memory name,
+                        string memory nif
+                    ) = fetchEntityData(entities[i]);
+                    data[i] = Entity(entity, name, nif);
+                }
+            }
+        }
+        return data;
+    }
+
+    function fetchEntityData(
+        address _entity
+    ) public view returns (address, string memory, string memory) {
+        return (
+            addressToEntityData[_entity].entity,
+            addressToEntityData[_entity].name,
+            addressToEntityData[_entity].nif
+        );
+    }
+
+    function createRequest(
+        address _company
+    ) external onlyGovernment(msg.sender) returns (bool) {
+        Request memory request = Request(
+            requestId,
+            _company,
+            msg.sender,
+            false,
+            Status.PENDING
+        );
+        requestIdToRequest[requestId] = request;
+        companyToRequest[_company].push(requestId);
+        govToRequest[msg.sender].push(requestId);
+        requestId += 1;
+        emit DataRequested(_company, msg.sender);
+        return true;
+    }
+    function answerRequest(uint _requestld, string calldata _newStatus) external onlyCompany(msg.sender){
+        if (Strings.equal(_newStatus, "Aprovado" )){
+            requestIdToRequest [_requestld].status = Status.APPROVED;
+        }else {
+            requestIdToRequest[_requestld].status= Status.DENIED;
+        }
+        requestIdToRequest[_requestld].answered = true;
     }
     
-    function fetchEntityData(address _entity) public view returns (address, string memory, string memory) {
-        return (addressToEntityData[_entity].entity, addressToEntityData[_entity].name, addressToEntityData[_entity].nif);
+    function checkRequestExists(address _company) external view onlyGovernment (msg. sender) returns(uint){
+        uint[] memory ids = govToRequest[msg.sender];
+           for (uint i = 0; i < ids.length; i++) {
+                if (requestIdToRequest[ids[i]].company == _company && requestIdToRequest[ids[i]].gov == msg.sender) {
+                    return ids[i];
+                }
+            }
+        return 0;
     }
+
+
 
 }
