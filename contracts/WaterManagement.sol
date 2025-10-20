@@ -185,10 +185,11 @@ contract WaterManagement is Ownable, AccessControl {
         requestIdToRequest[_requestld].answered = true;
     }
     
-    function checkRequestExists(address _company) external view onlyGovernment (msg. sender) returns(uint){
-        uint[] memory ids = govToRequest[msg.sender];
+    function checkRequestExists(address _government, address _company) public view  returns(uint){
+        require(hasRole(GOVERNMENT_ROLE, _government),"Debe tener un rol de Givierno");
+        uint[] memory ids = govToRequest[_government];
            for (uint i = 0; i < ids.length; i++) {
-                if (requestIdToRequest[ids[i]].company == _company && requestIdToRequest[ids[i]].gov == msg.sender) {
+                if (requestIdToRequest[ids[i]].company == _company && requestIdToRequest[ids[i]].gov == _government) {
                     return ids[i];
                 }
             }
@@ -226,12 +227,12 @@ contract WaterManagement is Ownable, AccessControl {
     }
 
     function pushData (string calldata _sensorId, string calldata _siteId, uint _value, uint _timestamp) external onlyCompany(msg.sender) returns(bool)  {
-        require (bytes ( _sensorId).length > 0, "Sensor ID data cannot be NULL" ) ;
-        require (bytes ( _siteId).length > 0, "Site ID data cannot be NULL" ) ;
-        require(_value > 0, "Mas de 0 litros de agua");
+        require (bytes ( _sensorId).length > 0, "Los datos del ID del sensor no pueden ser NULL" ) ;
+        require (bytes ( _siteId).length > 0, "Los datos del ID sitio no pueden ser   NULL" ) ;
+        require(_value >= 0, "Los litros de agua deben ser 0 o mas");
        require(_timestamp > 0, "Tiempo no puede ser 0");
-        require(checkSensorIdToCompany(_sensorId, msg. sender) ,"This sensor ID does not belong to the company");
-        require(fetchBenchmark(_siteId, msg. sender)!= 0, "This site ID does not belong to the company");
+        require(checkSensorIdToCompany(_sensorId, msg. sender) ,"Este ID de sensor no pertenece a la empresa");
+        require(fetchBenchmark(_siteId, msg. sender)!= 0, "Este ID de site no pertenece a la empresa");
 
         uint benchmark = fetchBenchmark(_siteId, msg.sender);
             SensorData memory sensorData = SensorData(_sensorId, _siteId, _value, _timestamp);
@@ -272,5 +273,38 @@ contract WaterManagement is Ownable, AccessControl {
             saved[_company] -= int(_benchmark);
         }
     }
+    
+    function pullDataByCompany() external view onlyCompany(msg.sender) returns(SensorData[] memory) {
+        return fetchData(msg. sender);
+    }
+
+    function pullDataByGovernment(address _company) external view onlyGovernment(msg.sender) returns(SensorData[] memory) {
+        require(checkRequestApproval(msg.sender, _company), "No tiene permiso para solicitar estos datos");
+        return fetchData(_company);
+    }
+
+    function fetchData(address _company) private view returns(SensorData[] memory){
+        SensorData[] memory data = new SensorData[] (companyToSensorData[_company].length);
+            for (uint i = 0; i < companyToSensorData[_company].length; i++){
+            data[i] = SensorData(
+                companyToSensorData[_company][i].sensorId,
+                companyToSensorData[_company][i].siteId,
+                companyToSensorData[_company][i].value,
+                companyToSensorData[_company][i].timestamp
+                );
+            }
+        return data;
+    }
+
+    function checkRequestApproval (address _government, address _company) private view returns (bool){
+        uint reqId = checkRequestExists(_government, _company) ;
+        require(reqId != 0, "No existe ninguna solicitud");
+        if (requestIdToRequest[reqId].status == Status.APPROVED) {
+            return true;
+    }
+
+    return false;
+    }
+
 
 }
