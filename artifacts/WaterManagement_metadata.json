@@ -293,6 +293,11 @@
 				"inputs": [
 					{
 						"internalType": "address",
+						"name": "_government",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
 						"name": "_company",
 						"type": "address"
 					}
@@ -587,6 +592,82 @@
 						"internalType": "address",
 						"name": "",
 						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "pullDataByCompany",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "string",
+								"name": "sensorId",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "siteId",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "value",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "timestamp",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct WaterManagement.SensorData[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_company",
+						"type": "address"
+					}
+				],
+				"name": "pullDataByGovernment",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "string",
+								"name": "sensorId",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "siteId",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "value",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "timestamp",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct WaterManagement.SensorData[]",
+						"name": "",
+						"type": "tuple[]"
 					}
 				],
 				"stateMutability": "view",
@@ -971,11 +1052,11 @@
 			]
 		},
 		"contracts/WaterManagement.sol": {
-			"keccak256": "0x0c6e856b8391edb3d8b539e2fca2cb68d038170c0c2fc0643f49e17728552bcc",
+			"keccak256": "0x421d0301fd74426d1d7f2862813e08e2a1f715d6853da057ffe97a2d85d95a2b",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://c7482366f6452ef5d694a7c4e750185e1ce434e27b5175849b998907e6251334",
-				"dweb:/ipfs/QmedHAKhcx4vFDADhQhM87VuwHwUWaeSihyo2VF4BP3ebF"
+				"bzz-raw://785abd0b0c8286c9f495c985fa82e9eaa72c0f2b6919ec6a6c4e58de8b41f3b9",
+				"dweb:/ipfs/QmTzMcWudGbExZnMzfPZ87fwKfwX4BYZyax9Xd6kNYbiKs"
 			]
 		},
 		"contracts/WaterToken.sol": {

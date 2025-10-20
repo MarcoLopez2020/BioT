@@ -10,14 +10,14 @@ contract WaterManagement is Ownable, AccessControl {
 
     uint private requestId;
     address[] private entities;
-    mapping(address => int) public saved;
+    mapping(address => int) private saved;
     mapping(address => uint[]) private companyToRequest;
     mapping(address => uint[]) private govToRequest;
     mapping(address => string[]) private companyToSensorIds;
     mapping(address => Entity) private addressToEntityData;
     mapping(uint => Request) private requestIdToRequest;
     mapping(address => Site[]) private companyToSites;
-    mapping(address => SensorData[]) public companyToSensorData;
+    mapping(address => SensorData[]) private companyToSensorData;
 
 
     bytes32 public constant COMPANY_ROLE = keccak256("COMPANY");
@@ -306,5 +306,24 @@ contract WaterManagement is Ownable, AccessControl {
     return false;
     }
 
+    function fecthSaved() external view returns (int ){
+        return saved[msg.sender];
+    }
+
+    function fetchSites() external view onlyCompany(msg.sender) returns(Site[] memory) {
+        return companyToSites[msg. sender];
+    }
+
+    function checkRole() external view returns (int){
+        if (owner() == msg.sender) {
+            return 0;
+        } else if (hasRole(GOVERNMENT_ROLE, msg.sender)){
+             return 1;
+        } else if (hasRole(COMPANY_ROLE, msg.sender)) {
+            return 2;
+        }else{
+            return -1;
+        }
+    }
 
 }
