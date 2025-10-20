@@ -286,11 +286,6 @@
 						"internalType": "address",
 						"name": "_to",
 						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_amount",
-						"type": "uint256"
 					}
 				],
 				"name": "mint",
@@ -609,11 +604,11 @@
 			]
 		},
 		"contracts/WaterToken.sol": {
-			"keccak256": "0xc87bb71f10d3d2e6c0829f8feb1ba9911f3edf558fa3361f54a8a2dd53ae7a5e",
+			"keccak256": "0xad8eb67fb3e09e77b05c6e3600134f370d1a788ed21f3a5bdc003c855b44268b",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://4f55e981631bee9ae014148d3616a9972c5ee85e3db31e548e2356407fcf6341",
-				"dweb:/ipfs/QmeJtD1JP6WSFzDQ1vTc6RPzV3KrAWuZZRBzR5AfyYUhg1"
+				"bzz-raw://42ce8ce4cefc4cd32f9e9d071d92c89fae2d6b1bfe9cfc5d4147279cb3799fa9",
+				"dweb:/ipfs/QmNUa1F7YsqNjeipYyUT28wvXPaHiMB5UK1QPpeFhtLRHj"
 			]
 		}
 	},

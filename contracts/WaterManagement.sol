@@ -10,14 +10,14 @@ contract WaterManagement is Ownable, AccessControl {
 
     uint private requestId;
     address[] private entities;
-    mapping(address => int) private saved;
+    mapping(address => int) public saved;
     mapping(address => uint[]) private companyToRequest;
     mapping(address => uint[]) private govToRequest;
     mapping(address => string[]) private companyToSensorIds;
     mapping(address => Entity) private addressToEntityData;
     mapping(uint => Request) private requestIdToRequest;
     mapping(address => Site[]) private companyToSites;
-    mapping(address => SensorData[]) private companyToSensorData;
+    mapping(address => SensorData[]) public companyToSensorData;
 
 
     bytes32 public constant COMPANY_ROLE = keccak256("COMPANY");
@@ -62,6 +62,8 @@ contract WaterManagement is Ownable, AccessControl {
     
     event EntityAdded(address indexed entity);
     event DataRequested(address indexed company, address indexed government);
+    event PushData(address indexed company, string indexed sensorId);
+
 
     constructor(address _waterAddress) Ownable(msg.sender) {
         waterToken = WaterToken(_waterAddress);
@@ -228,18 +230,15 @@ contract WaterManagement is Ownable, AccessControl {
         require (bytes ( _siteId).length > 0, "Site ID data cannot be NULL" ) ;
         require(_value > 0, "Mas de 0 litros de agua");
        require(_timestamp > 0, "Tiempo no puede ser 0");
+        require(checkSensorIdToCompany(_sensorId, msg. sender) ,"This sensor ID does not belong to the company");
+        require(fetchBenchmark(_siteId, msg. sender)!= 0, "This site ID does not belong to the company");
 
-        uint benchmark = checkSiteToCompany(_siteId, msg. sender) ;
-        if (checkSensorIdToCompany(_sensorId, msg. sender) && benchmark !=0){
+        uint benchmark = fetchBenchmark(_siteId, msg.sender);
             SensorData memory sensorData = SensorData(_sensorId, _siteId, _value, _timestamp);
             companyToSensorData[msg.sender].push(sensorData) ;
-
             mintToken(msg. sender, _value, benchmark);
-
-            return true;
-        }else{
-            return false;
-        }
+            emit PushData(msg. sender, _sensorId) ;
+        return true;
     }
 
     function checkSensorIdToCompany(string calldata _sensorId, address _company) private view returns (bool) {
@@ -252,7 +251,7 @@ contract WaterManagement is Ownable, AccessControl {
         return false;
     }
 
-        function checkSiteToCompany(string calldata _siteId, address _company) private view returns (uint) {
+        function fetchBenchmark(string calldata _siteId, address _company) private view returns (uint) {
         Site[] memory sites = companyToSites[_company];
         for (uint i = 0; i < sites.length; i++){
           if (Strings.equal(sites[i].siteId, _siteId)) {
@@ -269,7 +268,7 @@ contract WaterManagement is Ownable, AccessControl {
             saved[_company] -= int (_value - _benchmark) ;
         }
         if ( saved[_company] >= int(_benchmark)) {
-            waterToken. mint(_company, 1);
+            waterToken. mint(_company);
             saved[_company] -= int(_benchmark);
         }
     }

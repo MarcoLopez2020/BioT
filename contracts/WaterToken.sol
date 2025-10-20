@@ -13,8 +13,8 @@ contract WaterToken is ERC20, Ownable {
         _;
     }
     // mint tokens
-    function mint(address _to, uint _amount) external onlyMinter(tx.origin) {
-        _mint(_to, _amount);
+    function mint(address _to) external onlyMinter(tx.origin) {
+        _mint(_to, 1);
     }
 
     //add minero
