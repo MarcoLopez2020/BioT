@@ -65,6 +65,25 @@
 					{
 						"indexed": true,
 						"internalType": "address",
+						"name": "company",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "government",
+						"type": "address"
+					}
+				],
+				"name": "DataRequested",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
 						"name": "entity",
 						"type": "address"
 					}
@@ -236,30 +255,57 @@
 			{
 				"inputs": [
 					{
+						"internalType": "uint256",
+						"name": "_requestld",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "_newStatus",
+						"type": "string"
+					}
+				],
+				"name": "answerRequest",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "address",
-						"name": "",
+						"name": "_company",
 						"type": "address"
 					}
 				],
-				"name": "addressToEntityData",
+				"name": "checkRequestExists",
 				"outputs": [
 					{
-						"internalType": "address",
-						"name": "entity",
-						"type": "address"
-					},
-					{
-						"internalType": "string",
-						"name": "name",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "nif",
-						"type": "string"
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_company",
+						"type": "address"
+					}
+				],
+				"name": "createRequest",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -316,6 +362,99 @@
 						"internalType": "string",
 						"name": "",
 						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_requestId",
+						"type": "uint256"
+					}
+				],
+				"name": "fetchRequestData",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					},
+					{
+						"internalType": "enum WaterManagement.Status",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_requestId",
+						"type": "uint256"
+					}
+				],
+				"name": "fetchRequestStatus",
+				"outputs": [
+					{
+						"internalType": "enum WaterManagement.Status",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "fetchRequests",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "id",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "company",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "gov",
+								"type": "address"
+							},
+							{
+								"internalType": "bool",
+								"name": "answered",
+								"type": "bool"
+							},
+							{
+								"internalType": "enum WaterManagement.Status",
+								"name": "status",
+								"type": "uint8"
+							}
+						],
+						"internalType": "struct WaterManagement.Request[]",
+						"name": "",
+						"type": "tuple[]"
 					}
 				],
 				"stateMutability": "view",
@@ -680,11 +819,11 @@
 			]
 		},
 		"contracts/WaterManagement.sol": {
-			"keccak256": "0xc031f0e1972d8df3a2072f4a4aaa0e31a2fec74b31b58a650a7e99cb8f4e9b12",
+			"keccak256": "0x5673020bba16f04d42f60f2706a73682e9a4c69532a0e8700f273076c0474390",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://fa05ead5ee7cc29164ae6140eae1358af3c09200c4a6b59b649d7b879915129c",
-				"dweb:/ipfs/QmU2SK7rAHTNKH5yN4DSu6o5v1EUBXJLYfHpLE4skuaYWb"
+				"bzz-raw://7fdb41132b561d59f6c1920ff5e51a0bd2f684dbfb4d3f77c88e8a076719d097",
+				"dweb:/ipfs/QmWANivnh2fzGUgwigew5YHQXpWerjLgsvScKAXW3LzcxN"
 			]
 		},
 		"contracts/WaterToken.sol": {

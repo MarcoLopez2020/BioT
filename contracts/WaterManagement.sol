@@ -11,8 +11,12 @@ contract WaterManagement is Ownable, AccessControl {
     address[] private entities;
     mapping(address => uint[]) private companyToRequest;
     mapping(address => uint[]) private govToRequest;
+    mapping(address =>string[]) private companyToSensorIds;
     mapping(address => Entity) private addressToEntityData;
     mapping(uint => Request) private requestIdToRequest;
+    mapping(address => Site[]) private companyToSites;
+
+
 
     bytes32 public constant COMPANY_ROLE = keccak256("COMPANY");
     bytes32 public constant GOVERNMENT_ROLE = keccak256("GOVERNMENT");
@@ -32,12 +36,20 @@ contract WaterManagement is Ownable, AccessControl {
         Status status;
     }
 
+    struct Site{
+        string siteId;
+        string latitude;
+        string longitude;
+        uint benchmark;
+    }
+
     enum Status {
         PENDING,
         APPROVED,
         DENIED
     }
 
+    
     event EntityAdded(address indexed entity);
     event DataRequested(address indexed company, address indexed government);
 
@@ -171,6 +183,34 @@ contract WaterManagement is Ownable, AccessControl {
         return 0;
     }
 
+    function fetchRequestStatus(uint _requestId) external view onlyGovernment(msg. sender) returns(Status){
+    return requestIdToRequest[_requestId].status;
+    }
 
+    function fetchRequests() external view onlyCompany (msg.sender) returns (Request[] memory){
+        Request[] memory requests = new Request[] (companyToRequest [msg. sender] . length);
+        uint[] memory ids = companyToRequest[msg.sender] ;
+        for (uint i = 0; i < ids.length; i++) {
+            requests [i] = requestIdToRequest[ids[i]];
+        }
+       return requests;
+    }
 
-}
+    function fetchRequestData(uint _requestId) external view returns (address, address, bool, Status) {
+        return (
+        requestIdToRequest [_requestId].company,
+        requestIdToRequest [_requestId].gov,
+        requestIdToRequest [_requestId].answered,
+        requestIdToRequest [_requestId].status    
+        );
+    }
+
+    function registerSensor(string calldata _sensorId) external onlyCompany(msg. sender) {
+        companyToSensorIds[msg.sender].push(_sensorId) ;
+    }
+
+    function registerSite(string calldata _siteId, string calldata _latitude, string calldata _longitude, uint _benchmark) external onlyCompany(msg.sender) {
+         companyToSites[msg.sender].push(Site( _siteId, _latitude, _longitude, _benchmark));
+    }
+
+}        
