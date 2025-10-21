@@ -543,7 +543,7 @@
 		"compilationTarget": {
 			"contracts/WaterToken.sol": "WaterToken"
 		},
-		"evmVersion": "prague",
+		"evmVersion": "shanghai",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
@@ -604,11 +604,11 @@
 			]
 		},
 		"contracts/WaterToken.sol": {
-			"keccak256": "0xad8eb67fb3e09e77b05c6e3600134f370d1a788ed21f3a5bdc003c855b44268b",
+			"keccak256": "0xf700de5a4bc64fd6229292ce5f7d4ef27a61c9aaa4f73411d70de8f516d72bcd",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://42ce8ce4cefc4cd32f9e9d071d92c89fae2d6b1bfe9cfc5d4147279cb3799fa9",
-				"dweb:/ipfs/QmNUa1F7YsqNjeipYyUT28wvXPaHiMB5UK1QPpeFhtLRHj"
+				"bzz-raw://c927f41e89328b7cb92e292d62489033a344bae3de8937f47fa11bcd1481a565",
+				"dweb:/ipfs/QmZTFioZyr8axrJskCz6xuhfuX1h47XkdN7mbJtJcZjyst"
 			]
 		}
 	},

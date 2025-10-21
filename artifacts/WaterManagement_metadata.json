@@ -9,7 +9,7 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_waterAddress",
+						"name": "_waterToken",
 						"type": "address"
 					}
 				],
@@ -275,7 +275,7 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "_requestld",
+						"name": "_requestId",
 						"type": "uint256"
 					},
 					{
@@ -314,39 +314,13 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "companyToSensorData",
+				"inputs": [],
+				"name": "checkRole",
 				"outputs": [
 					{
-						"internalType": "string",
-						"name": "sensorId",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "siteId",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "value",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "timestamp",
-						"type": "uint256"
+						"internalType": "int256",
+						"name": "",
+						"type": "int256"
 					}
 				],
 				"stateMutability": "view",
@@ -516,6 +490,54 @@
 							}
 						],
 						"internalType": "struct WaterManagement.Request[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "fetchSaved",
+				"outputs": [
+					{
+						"internalType": "int256",
+						"name": "",
+						"type": "int256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "fetchSites",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "string",
+								"name": "siteId",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "latitude",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "longitude",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "benchmark",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct WaterManagement.Site[]",
 						"name": "",
 						"type": "tuple[]"
 					}
@@ -794,25 +816,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"name": "saved",
-				"outputs": [
-					{
-						"internalType": "int256",
-						"name": "",
-						"type": "int256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "bytes4",
 						"name": "interfaceId",
 						"type": "bytes4"
@@ -919,7 +922,7 @@
 		"compilationTarget": {
 			"contracts/WaterManagement.sol": "WaterManagement"
 		},
-		"evmVersion": "prague",
+		"evmVersion": "shanghai",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
@@ -1052,19 +1055,19 @@
 			]
 		},
 		"contracts/WaterManagement.sol": {
-			"keccak256": "0x421d0301fd74426d1d7f2862813e08e2a1f715d6853da057ffe97a2d85d95a2b",
+			"keccak256": "0xda8fc72e6ce207b4db86a8cbf6ce6f15b400c2870d28c77278f929c86636459c",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://785abd0b0c8286c9f495c985fa82e9eaa72c0f2b6919ec6a6c4e58de8b41f3b9",
-				"dweb:/ipfs/QmTzMcWudGbExZnMzfPZ87fwKfwX4BYZyax9Xd6kNYbiKs"
+				"bzz-raw://a9af6cba2385001ec5bd6a811360771e02c2c070f10ae20a9be26f249f53d98c",
+				"dweb:/ipfs/QmZkVtUXFmRr3MHj7VT4kDUmmKg3G6yoRewtAaeXtXjJgM"
 			]
 		},
 		"contracts/WaterToken.sol": {
-			"keccak256": "0xad8eb67fb3e09e77b05c6e3600134f370d1a788ed21f3a5bdc003c855b44268b",
+			"keccak256": "0xf700de5a4bc64fd6229292ce5f7d4ef27a61c9aaa4f73411d70de8f516d72bcd",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://42ce8ce4cefc4cd32f9e9d071d92c89fae2d6b1bfe9cfc5d4147279cb3799fa9",
-				"dweb:/ipfs/QmNUa1F7YsqNjeipYyUT28wvXPaHiMB5UK1QPpeFhtLRHj"
+				"bzz-raw://c927f41e89328b7cb92e292d62489033a344bae3de8937f47fa11bcd1481a565",
+				"dweb:/ipfs/QmZTFioZyr8axrJskCz6xuhfuX1h47XkdN7mbJtJcZjyst"
 			]
 		}
 	},
