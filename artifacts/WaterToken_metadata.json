@@ -543,7 +543,7 @@
 		"compilationTarget": {
 			"contracts/WaterToken.sol": "WaterToken"
 		},
-		"evmVersion": "shanghai",
+		"evmVersion": "prague",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"

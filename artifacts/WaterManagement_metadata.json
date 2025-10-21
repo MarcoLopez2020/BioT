@@ -922,7 +922,7 @@
 		"compilationTarget": {
 			"contracts/WaterManagement.sol": "WaterManagement"
 		},
-		"evmVersion": "shanghai",
+		"evmVersion": "prague",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"

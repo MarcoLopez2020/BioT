@@ -69,7 +69,7 @@ contract WaterManagement is Ownable, AccessControl {
     modifier onlyGovernment(address _government) {
         require(
             hasRole(GOVERNMENT_ROLE, _government),
-            "Address provided hasn't got GOVERNMENT role"
+            "La direccion no es un rol GOVERNMENT"
         );
         _;
     }
@@ -77,7 +77,7 @@ contract WaterManagement is Ownable, AccessControl {
     modifier onlyCompany(address _company) {
         require(
             hasRole(COMPANY_ROLE, _company),
-            "Address provided hasn't got COMPANY role"
+            "La direccion no es un rol COMPANY"
         );
         _;
     }
@@ -90,7 +90,7 @@ contract WaterManagement is Ownable, AccessControl {
     ) external onlyOwner {
         require(
             owner() != _entityAddress,
-            "The entity address cannot be the same as the owner of the contract"
+            "La direccion de la entidad no puede ser la misma que la del contrato"
         );
         Entity memory entity = Entity(_entityAddress, _name, _nif);
         addressToEntityData[_entityAddress] = entity;
@@ -111,7 +111,7 @@ contract WaterManagement is Ownable, AccessControl {
         require(
             hasRole(GOVERNMENT_ROLE, msg.sender) ||
                 hasRole(COMPANY_ROLE, msg.sender),
-            "The entity does not have any role"
+            "La entidad no posee ningun rol"
         );
 
         Entity[] memory data = new Entity[](entities.length);
@@ -176,7 +176,7 @@ contract WaterManagement is Ownable, AccessControl {
         uint _requestId,
         string calldata _newStatus
     ) external onlyCompany(msg.sender) {
-        if (Strings.equal(_newStatus, "approved")) {
+        if (Strings.equal(_newStatus, "aprovado")) {
             requestIdToRequest[_requestId].status = Status.APPROVED;
         } else {
             requestIdToRequest[_requestId].status = Status.DENIED;
@@ -190,7 +190,7 @@ contract WaterManagement is Ownable, AccessControl {
     ) public view returns (uint) {
         require(
             hasRole(GOVERNMENT_ROLE, _government),
-            "You must have a GOVERNMENT role"
+            "Debe tener un rol de Givierno"
         );
         uint[] memory ids = govToRequestIds[_government];
         for (uint i = 0; i < ids.length; i++) {
@@ -260,17 +260,17 @@ contract WaterManagement is Ownable, AccessControl {
         uint _value,
         uint _timestamp
     ) external onlyCompany(msg.sender) returns (bool) {
-        require(bytes(_sensorId).length > 0, "Sensor ID data cannot be NULL");
-        require(bytes(_siteId).length > 0, "Site ID data cannot be NULL");
-        require(_value >= 0, "Liters of water must be 0 or greater");
-        require(_timestamp > 0, "Timestamp must be 0 or greater");
+        require(bytes(_sensorId).length > 0, "ID del sensor no pueden ser NULL");
+        require(bytes(_siteId).length > 0, "ID del sitio no pueden ser NULL");
+        require(_value >= 0, "Los litros de agua deben ser 0 o mas");
+        require(_timestamp > 0, "Tiempo no puede ser 0");
         require(
             checkSensorIdToCompany(_sensorId, msg.sender),
-            "This sensor ID is not registered"
+            "Este ID de sensor no esta registrado"
         );
         require(
             fetchBenchmark(_siteId, msg.sender) != 0,
-            "This site ID is not registered"
+            "Este ID de sitio no esta registrado"
         );
 
         uint benchmark = fetchBenchmark(_siteId, msg.sender);
@@ -339,7 +339,7 @@ contract WaterManagement is Ownable, AccessControl {
     ) external view onlyGovernment(msg.sender) returns (SensorData[] memory) {
         require(
             checkRequestApproval(msg.sender, _company),
-            "You are not allowed to request this data"
+            "No tiene permiso para solicitar estos datos"
         );
         return fetchData(_company);
     }
@@ -366,7 +366,7 @@ contract WaterManagement is Ownable, AccessControl {
         address _company
     ) private view returns (bool) {
         uint reqId = checkRequestExists(_government, _company);
-        require(reqId != 0, "No request exists");
+        require(reqId != 0, "No existe ninguna solicitud");
         if (requestIdToRequest[reqId].status == Status.APPROVED) {
             return true;
         }

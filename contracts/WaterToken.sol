@@ -12,7 +12,7 @@ contract WaterToken is ERC20, Ownable {
     }
 
     modifier onlyMinter(address _sender) {
-        require(minters[_sender], "Not a minter");
+        require(minters[_sender], "No es un acunador");
         _;
     }
 
@@ -23,7 +23,7 @@ contract WaterToken is ERC20, Ownable {
 
     // add minter
     function addMinter(address _minter) external {
-        require(owner() == tx.origin, "You cannot add new minters");
+        require(owner() == tx.origin, "No puedes agregar nuevos acunador");
         minters[_minter] = true;
     }
 }
